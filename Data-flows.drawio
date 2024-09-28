@@ -271,7 +271,7 @@
         <mxCell id="P7q6h8zH5KanoZMI_rnn-124" value="deleteRecipe" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=50;tabHeight=17;tabPosition=left;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;" parent="1" vertex="1">
           <mxGeometry x="1439" y="846.5" width="112" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="P7q6h8zH5KanoZMI_rnn-126" value="getRecipe&lt;br&gt;ByName" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=50;tabHeight=17;tabPosition=left;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;" parent="1" vertex="1">
+        <mxCell id="P7q6h8zH5KanoZMI_rnn-126" value="getRecipe&lt;br&gt;ByName" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=50;tabHeight=17;tabPosition=left;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="1" vertex="1">
           <mxGeometry x="1439" y="295" width="112" height="70" as="geometry" />
         </mxCell>
         <mxCell id="P7q6h8zH5KanoZMI_rnn-156" value="getRecipesBy&lt;br&gt;Ingredients" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=50;tabHeight=17;tabPosition=left;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;" parent="1" vertex="1">
@@ -348,6 +348,15 @@
         </mxCell>
         <mxCell id="P7q6h8zH5KanoZMI_rnn-210" value="GetRecipeInfoResults" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="P7q6h8zH5KanoZMI_rnn-209" vertex="1">
           <mxGeometry x="18.5" y="12.5" width="103" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="DMdwLOlhz-RqU4PCPld1-1" value="getRecipeByName - do we need this as can&#39;t see if in the User Journey" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1590" y="303" width="140" height="77" as="geometry" />
+        </mxCell>
+        <mxCell id="DMdwLOlhz-RqU4PCPld1-2" value="Modifed insertIngredient to addIngredient to be inline with CRUD&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="309" width="140" height="71" as="geometry" />
+        </mxCell>
+        <mxCell id="DMdwLOlhz-RqU4PCPld1-3" value="Modifed insertRecipe to addRecipe&lt;div&gt;&amp;nbsp;to be inline with CRUD&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="670" width="140" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
