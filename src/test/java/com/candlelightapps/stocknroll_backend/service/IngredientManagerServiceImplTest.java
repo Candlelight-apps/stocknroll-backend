@@ -33,6 +33,7 @@ class IngredientManagerServiceImplTest {
     Ingredient bread;
     Ingredient invalidIngredient;
     Ingredient expiredIngredient;
+    Ingredient nullIngredient;
 
     @BeforeEach
     public void setup() {
@@ -73,6 +74,8 @@ class IngredientManagerServiceImplTest {
                 .quantity(1)
                 .expiryDate(LocalDate.of(1986, 4, 26))
                 .build();
+
+        nullIngredient = null;
 
     }
 
@@ -141,6 +144,15 @@ class IngredientManagerServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Returns null ingredient when passed null ingredient object")
+    public void testAddIngredient_WhenIngredientIsNull() {
 
+        when(mockIngredientRepository.save(nullIngredient)).thenReturn(nullIngredient);
 
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(nullIngredient);
+
+        assertNull(result);
+
+    }
 }
