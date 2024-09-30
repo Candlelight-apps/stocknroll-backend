@@ -22,7 +22,7 @@ public class RecipeManagerController {
     RecipeManagerService recipeManagerService;
 
     @PostMapping
-    public ResponseEntity<Recipe> addAlbum(@RequestBody Recipe recipe) {
+    public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         Recipe newRecipe = recipeManagerService.addRecipe(recipe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("recipeManagerService", "/api/v1/stocknroll/" + recipe.getId());
