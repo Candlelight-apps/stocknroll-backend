@@ -26,7 +26,7 @@ public class RecipeManagerController {
         Recipe newRecipe = recipeManagerService.addRecipe(recipe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("recipeManagerService", "/api/v1/stocknroll/" + recipe.getId());
-        return new ResponseEntity<>(newRecipe, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(newRecipe, httpHeaders, HttpStatus.CREATED);
     }
 
 }
