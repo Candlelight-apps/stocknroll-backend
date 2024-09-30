@@ -20,6 +20,9 @@ public class SpoonacularDAO {
     }
 
     public static Data getRecipesByCriteria(String cuisine, String diet, String intolerances) {
+        cuisine = cuisine==null? "":cuisine;
+        diet = diet==null? "":diet;
+        intolerances = intolerances==null? "":intolerances;
 
         Data result = client.get()
                 .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&cuisine=" + cuisine + "&diet=" + diet + "&intolerances=" + intolerances)
@@ -27,4 +30,5 @@ public class SpoonacularDAO {
                 .retrieve().bodyToMono(Data.class).block();
         return result;
     }
+
 }
