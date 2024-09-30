@@ -23,6 +23,7 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        return null;
+        ingredientRepository.save(ingredient);
+        return ingredient;
     }
 }

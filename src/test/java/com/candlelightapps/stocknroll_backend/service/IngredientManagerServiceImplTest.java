@@ -87,4 +87,17 @@ class IngredientManagerServiceImplTest {
         assertEquals(ingredientList, actualResults);
 
     }
+
+    @Test
+    @DisplayName("Returns ingredient that was posted when passed valid ingredient object")
+    public void testAddIngredient_WhenPassedValidIngredient() {
+
+        when(mockIngredientRepository.save(canOfTomatoes)).thenReturn(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        verify(mockIngredientRepository, times(1)).save(canOfTomatoes);
+        assertEquals(canOfTomatoes, result);
+    }
+
 }
