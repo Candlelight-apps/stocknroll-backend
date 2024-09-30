@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.rmi.server.ExportException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +39,43 @@ class IngredientManagerControllerTest {
     private MockMvc mockMvcController;
 
     List<Ingredient> ingredientList = new ArrayList<>();
+    Ingredient canOfTomatoes;
+    Ingredient cornflakes;
+    Ingredient bread;
 
     @BeforeEach
     public void setup() {
         mockMvcController = MockMvcBuilders.standaloneSetup(ingredientManagerController).build();
 
+        canOfTomatoes = Ingredient.builder()
+                .id(1L)
+                .name("Can of tomatoes")
+                .category("Vegetables")
+                .quantity(4)
+                .expiryDate(LocalDate.of(2025,12,31))
+                .build();
 
+        cornflakes = Ingredient.builder()
+                .id(2L)
+                .name("Cornflakes")
+                .category("Breakfast cereals")
+                .quantity(1)
+                .expiryDate(LocalDate.of(2025,5,31))
+                .build();
 
+        bread = Ingredient.builder()
+                .id(3L)
+                .name("Wholemeal bread")
+                .category("Bread")
+                .quantity(1)
+                .expiryDate(LocalDate.of(2024,10,11))
+                .build();
 
     }
 
     @Test
-    @DisplayName("Returns empty JSON array when GET instruction send to /ingredients endpoint when inventory is empty.")
-    void testGetAllIngredients() throws Exception {
+    @DisplayName("Returns empty JSON array when GET instruction sent to /ingredients endpoint when inventory is empty.")
+    void testGetAllIngredients_whenIngredientRepositoryIsEmpty() throws Exception {
 
         ingredientList = null;
 
@@ -59,6 +85,31 @@ class IngredientManagerControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().string(""));
+
+    }
+
+    @Test
+    @DisplayName("Returns JSON array of Ingredients when GET instruction sent to /ingredients endpoint when inventory populated.")
+    void testGetAllIngredients_whenIngredientsRepositoryContainsIngredients() throws Exception {
+
+        ingredientList.add(canOfTomatoes);
+        ingredientList.add(cornflakes);
+        ingredientList.add(bread);
+
+        when(mockIngredientMangerServiceImpl.getAllIngredients()).thenReturn(ingredientList);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/ingredients"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Can of tomatoes"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].quantity").value(4))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Cornflakes"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].quantity").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].id").value(3L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Wholemeal bread"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].quantity").value(1));
 
     }
 }
