@@ -7,10 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StocknrollBackendApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(StocknrollBackendApplication.class, args);
-
-
 	}
 
 }
