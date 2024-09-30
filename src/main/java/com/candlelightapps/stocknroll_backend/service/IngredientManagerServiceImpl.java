@@ -20,4 +20,9 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
         ingredientRepository.findAll().forEach(ingredientList::add);
         return ingredientList;
     }
+
+    @Override
+    public Ingredient addIngredient(Ingredient ingredient) {
+        return null;
+    }
 }
