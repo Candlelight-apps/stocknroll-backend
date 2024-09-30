@@ -49,6 +49,8 @@ class IngredientManagerControllerTest {
     Ingredient canOfTomatoes;
     Ingredient cornflakes;
     Ingredient bread;
+    Ingredient invalidIngredient;
+    Ingredient nullIngredient;
 
     @BeforeEach
     public void setup() {
@@ -62,7 +64,7 @@ class IngredientManagerControllerTest {
                 .name("Can of tomatoes")
                 .category("Vegetables")
                 .quantity(4)
-                .expiryDate(LocalDate.of(2025,12,31))
+                .expiryDate(LocalDate.of(2025, 12, 31))
                 .build();
 
         cornflakes = Ingredient.builder()
@@ -70,7 +72,7 @@ class IngredientManagerControllerTest {
                 .name("Cornflakes")
                 .category("Breakfast cereals")
                 .quantity(1)
-                .expiryDate(LocalDate.of(2025,5,31))
+                .expiryDate(LocalDate.of(2025, 5, 31))
                 .build();
 
         bread = Ingredient.builder()
@@ -78,9 +80,13 @@ class IngredientManagerControllerTest {
                 .name("Wholemeal bread")
                 .category("Bread")
                 .quantity(1)
-                .expiryDate(LocalDate.of(2024,10,11))
+                .expiryDate(LocalDate.of(2024, 10, 11))
                 .build();
 
+        invalidIngredient = Ingredient.builder()
+                .category("dairy")
+                .quantity(1)
+                .build();
     }
 
     @Test
@@ -130,12 +136,28 @@ class IngredientManagerControllerTest {
         when(mockIngredientMangerServiceImpl.addIngredient(canOfTomatoes)).thenReturn(canOfTomatoes);
 
         this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/stocknroll/ingredients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(canOfTomatoes)))
-        .andExpect(MockMvcResultMatchers.status().isCreated())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(canOfTomatoes)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print());
 
         verify(mockIngredientMangerServiceImpl, times(1)).addIngredient(canOfTomatoes);
 
+    }
+
+    @Test
+    @DisplayName("Returns 406 Not Acceptable error when invalid JSON submitted as part of POST request")
+    public void testAddIngredient_insertAlbum_WithJSONMissingRequiredFields() throws Exception {
+
+        nullIngredient = null;
+
+        when(mockIngredientMangerServiceImpl.addIngredient(invalidIngredient)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/stocknroll/ingredients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(invalidIngredient)))
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
     }
 }
