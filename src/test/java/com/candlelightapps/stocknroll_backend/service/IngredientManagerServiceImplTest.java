@@ -1,7 +1,9 @@
 package com.candlelightapps.stocknroll_backend.service;
 
+import com.candlelightapps.stocknroll_backend.exception.ParameterNotDefinedException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ class IngredientManagerServiceImplTest {
     Ingredient canOfTomatoes;
     Ingredient cornflakes;
     Ingredient bread;
+    Ingredient invalidIngredient;
 
     @BeforeEach
     public void setup() {
@@ -55,6 +58,12 @@ class IngredientManagerServiceImplTest {
                 .category("Bread")
                 .quantity(1)
                 .expiryDate(LocalDate.of(2024,10,11))
+                .build();
+
+        invalidIngredient = Ingredient.builder()
+                .name("")
+                .category("dairy")
+                .quantity(1)
                 .build();
 
     }
@@ -98,6 +107,18 @@ class IngredientManagerServiceImplTest {
 
         verify(mockIngredientRepository, times(1)).save(canOfTomatoes);
         assertEquals(canOfTomatoes, result);
+    }
+
+    @Test
+    @DisplayName("Return null ingredient when passed invalid ingredient object")
+    public void testAddIngredient_WhenPassedInvalidIngredient() {
+
+        when(mockIngredientRepository.save(invalidIngredient)).thenReturn(invalidIngredient);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(invalidIngredient);
+
+        assertNull(result);
+
     }
 
 }

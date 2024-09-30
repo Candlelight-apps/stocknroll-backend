@@ -1,5 +1,6 @@
 package com.candlelightapps.stocknroll_backend.service;
 
+import com.candlelightapps.stocknroll_backend.exception.ParameterNotDefinedException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,19 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        ingredientRepository.save(ingredient);
-        return ingredient;
+        Ingredient ingredientAdded;
+
+        try {
+            if (ingredient.getName().isEmpty() || ingredient.getCategory().isEmpty() || ingredient.getQuantity() == 0) {
+                throw new ParameterNotDefinedException("Missing/invalid field(s) in ingredient.");
+            }
+            ingredientRepository.save(ingredient);
+            ingredientAdded = ingredient;
+
+        } catch (ParameterNotDefinedException e) {
+            ingredientAdded = null;
+        }
+
+        return ingredientAdded;
     }
 }
