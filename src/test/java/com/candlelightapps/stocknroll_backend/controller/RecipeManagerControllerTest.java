@@ -47,12 +47,12 @@ class RecipeManagerControllerTest {
     @DisplayName("Add a recipe for favourites")
     public void testAddRecipe() throws Exception {
 
-        Recipe recipe = new Recipe(1L, 100001L, "Vegetable Lasagne", 75, "", "", true);
+        Recipe recipe = new Recipe(1L, 664737L, "Veggie Lasagna Rolls with Peppery Pecorino Marinara", 45, "https://www.foodista.com/recipe/LYYTJFHX/veggie-lasagna-rolls-w-peppery-pecorino-marinara", "https://img.spoonacular.com/recipes/664737-312x231.jpg", true);
 
         when(mockRecipeManagerServiceImpl.addRecipe(recipe)).thenReturn(recipe);
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.post("/api/v1/stocknroll/")
+                        MockMvcRequestBuilders.post("/api/v1/stocknroll/recipes")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isCreated());

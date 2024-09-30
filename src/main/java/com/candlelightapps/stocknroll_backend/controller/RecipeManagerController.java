@@ -21,7 +21,7 @@ public class RecipeManagerController {
     @Autowired
     RecipeManagerService recipeManagerService;
 
-    @PostMapping
+    @PostMapping("/recipes")
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         Recipe newRecipe = recipeManagerService.addRecipe(recipe);
         HttpHeaders httpHeaders = new HttpHeaders();
