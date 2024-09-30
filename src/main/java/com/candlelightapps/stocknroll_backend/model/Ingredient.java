@@ -34,5 +34,5 @@ public class Ingredient {
 
     @Column
     String imageUrl; //nice to have
-
 }
+
