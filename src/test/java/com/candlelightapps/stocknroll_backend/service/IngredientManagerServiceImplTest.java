@@ -32,6 +32,7 @@ class IngredientManagerServiceImplTest {
     Ingredient cornflakes;
     Ingredient bread;
     Ingredient invalidIngredient;
+    Ingredient expiredIngredient;
 
     @BeforeEach
     public void setup() {
@@ -62,8 +63,15 @@ class IngredientManagerServiceImplTest {
 
         invalidIngredient = Ingredient.builder()
                 .name("")
-                .category("dairy")
+                .category("Dairy")
                 .quantity(1)
+                .build();
+
+        expiredIngredient = Ingredient.builder()
+                .name("Smelly cheese")
+                .category("Dairy")
+                .quantity(1)
+                .expiryDate(LocalDate.of(1986, 4, 26))
                 .build();
 
     }
@@ -110,7 +118,7 @@ class IngredientManagerServiceImplTest {
     }
 
     @Test
-    @DisplayName("Return null ingredient when passed invalid ingredient object")
+    @DisplayName("Returns null ingredient when passed invalid ingredient object")
     public void testAddIngredient_WhenPassedInvalidIngredient() {
 
         when(mockIngredientRepository.save(invalidIngredient)).thenReturn(invalidIngredient);
@@ -120,5 +128,19 @@ class IngredientManagerServiceImplTest {
         assertNull(result);
 
     }
+
+    @Test
+    @DisplayName("Returns null ingredient when passed ingredient object with expiry date in the past")
+    public void testAddIngredient_WhenIngredientExpiryDateExceed() {
+
+        when(mockIngredientRepository.save(expiredIngredient)).thenReturn(expiredIngredient);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(expiredIngredient);
+
+        assertNull(result);
+
+    }
+
+
 
 }
