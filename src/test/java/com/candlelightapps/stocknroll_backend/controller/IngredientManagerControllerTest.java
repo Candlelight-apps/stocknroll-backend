@@ -51,6 +51,8 @@ class IngredientManagerControllerTest {
     Ingredient bread;
     Ingredient invalidIngredient;
     Ingredient nullIngredient;
+    Ingredient breadUpdatedQty;
+    Ingredient invalidIngredientQty;
 
     @BeforeEach
     public void setup() {
@@ -86,6 +88,22 @@ class IngredientManagerControllerTest {
         invalidIngredient = Ingredient.builder()
                 .category("dairy")
                 .quantity(1)
+                .build();
+
+        breadUpdatedQty = Ingredient.builder()
+                .id(3L)
+                .name("Wholemeal bread")
+                .category("Bread")
+                .quantity(2)
+                .expiryDate(LocalDate.of(2024, 10, 11))
+                .build();
+
+        invalidIngredientQty = Ingredient.builder()
+                .id(1L)
+                .name("Invalid quantity")
+                .category("Vegetables")
+                .quantity(4)
+                .expiryDate(LocalDate.of(2025, 12, 31))
                 .build();
     }
 
@@ -160,4 +178,58 @@ class IngredientManagerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
     }
+
+    @Test
+    @DisplayName("Returns 404 Not Found error when passed id of ingredient that is not found.")
+    public void testUpdateIngredient_WhenIdOfIngredientNotFound() throws Exception {
+
+        nullIngredient = null;
+
+        when(mockIngredientMangerServiceImpl.updateIngredient(1L, 2)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(2)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
+
+    }
+
+    @Test
+    @DisplayName("Returns JSON of updated ingredient and returns HTTP OK when id of ingredient found.")
+    public void testUpdateIngredient_WhenIdOfIngredientFound() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.updateIngredient(3L, 2)).thenReturn(breadUpdatedQty);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(2)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(2));
+
+        verify(mockIngredientMangerServiceImpl, times(1)).updateIngredient(3L, 2);
+
+    }
+
+    @Test
+    @DisplayName("Returns 400 Bad Request when quantity of matched ingredient is set to less than zero.")
+    public void testUpdateIngredient_WhenQuantityOfIngredientSetLessThanZero() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.updateIngredient(1L, -1)).thenReturn(invalidIngredientQty);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(-1)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(4));;
+
+        verify(mockIngredientMangerServiceImpl, times(1)).updateIngredient(1L, -1);
+
+    }
+
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -155,4 +156,50 @@ class IngredientManagerServiceImplTest {
         assertNull(result);
 
     }
+
+    @Test
+    @DisplayName("Returns ingredient with updated quantity when match found for ingredient id.")
+    public void testUpdateIngredient_WhenMatchFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(1L, 1);
+
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("Can of tomatoes", result.getName()),
+                () -> assertEquals(1, result.getQuantity()));
+
+    }
+
+    @Test
+    @DisplayName("Returns null ingredient when no match found by ingredient id.")
+    public void testUpdateIngredient_WhenMatchNoFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(2L)).thenReturn(null);
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(2L, 10);
+
+        assertNull(result);
+
+    }
+
+    @Test
+    @DisplayName("Returns null ingredient when quantity passed is less than zero.")
+    public void testUpdateIngredient_WhenQuantityPassLessThanZero() {
+
+        when(mockIngredientRepository.findById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(1L, -1);
+
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("Invalid quantity", result.getName()),
+                () -> assertEquals(4, result.getQuantity()));
+
+    }
+
 }

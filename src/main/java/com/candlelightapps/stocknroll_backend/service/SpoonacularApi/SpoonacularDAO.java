@@ -1,6 +1,5 @@
 package com.candlelightapps.stocknroll_backend.service.SpoonacularApi;
 
-
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;

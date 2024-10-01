@@ -1,5 +1,6 @@
 package com.candlelightapps.stocknroll_backend.service;
 
+import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.exception.ParameterNotDefinedException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
@@ -54,4 +55,36 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
         return ingredientAdded;
     }
+
+    @Override
+    public Ingredient updateIngredient(Long id, Integer quantity) {
+
+        Ingredient updatedIngredient = new Ingredient();
+
+        try {
+            try {
+                if (ingredientRepository.findById(id).isPresent()) {
+                    updatedIngredient = ingredientRepository.findById(id).get();
+
+                    if (quantity < 0) {
+                        updatedIngredient.setName("Invalid quantity");
+                        return updatedIngredient;
+
+                    }
+                    updatedIngredient.setQuantity(quantity);
+                    ingredientRepository.save(updatedIngredient);
+                    return updatedIngredient;
+
+                }
+            } catch (NullPointerException e) {
+                throw new ItemNotFoundException("No ingredient found with that id");
+
+            }
+        } catch (ItemNotFoundException e) {
+            updatedIngredient = null;
+
+        }
+        return updatedIngredient;
+    }
 }
+

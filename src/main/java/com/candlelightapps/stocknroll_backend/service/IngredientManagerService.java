@@ -9,4 +9,6 @@ public interface IngredientManagerService {
     List<Ingredient> getAllIngredients();
 
     Ingredient addIngredient(Ingredient ingredient);
+
+    Ingredient updateIngredient(Long id, Integer quantity);
 }
