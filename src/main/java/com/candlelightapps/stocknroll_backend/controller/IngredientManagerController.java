@@ -40,6 +40,10 @@ public class IngredientManagerController {
 
         if (updatedIngredient == null) {
             return new ResponseEntity<>(updatedIngredient, HttpStatus.NOT_FOUND);
+
+        } else if (updatedIngredient.getName().equals("Invalid quantity")) {
+            return new ResponseEntity<>(updatedIngredient, HttpStatus.BAD_REQUEST);
+
         }
         return new ResponseEntity<>(updatedIngredient, HttpStatus.OK);
     }

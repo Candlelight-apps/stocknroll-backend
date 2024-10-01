@@ -52,6 +52,7 @@ class IngredientManagerControllerTest {
     Ingredient invalidIngredient;
     Ingredient nullIngredient;
     Ingredient breadUpdatedQty;
+    Ingredient invalidIngredientQty;
 
     @BeforeEach
     public void setup() {
@@ -95,6 +96,14 @@ class IngredientManagerControllerTest {
                 .category("Bread")
                 .quantity(2)
                 .expiryDate(LocalDate.of(2024, 10, 11))
+                .build();
+
+        invalidIngredientQty = Ingredient.builder()
+                .id(1L)
+                .name("Invalid quantity")
+                .category("Vegetables")
+                .quantity(4)
+                .expiryDate(LocalDate.of(2025, 12, 31))
                 .build();
     }
 
@@ -204,4 +213,25 @@ class IngredientManagerControllerTest {
         verify(mockIngredientMangerServiceImpl, times(1)).updateIngredient(3L, 2);
 
     }
+
+    @Test
+    @DisplayName("Returns 400 Bad Request when quantity of matched ingredient is set to less than zero.")
+    public void testUpdateIngredient_WhenQuantityOfIngredientSetLessThanZero() throws Exception {
+
+        nullIngredient = null;
+
+        when(mockIngredientMangerServiceImpl.updateIngredient(1L, -1)).thenReturn(invalidIngredientQty);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(-1)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(4));;
+
+        verify(mockIngredientMangerServiceImpl, times(1)).updateIngredient(1L, -1);
+
+    }
+
 }

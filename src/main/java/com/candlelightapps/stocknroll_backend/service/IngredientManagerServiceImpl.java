@@ -57,6 +57,20 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
     @Override
     public Ingredient updateIngredient(Long id, Integer quantity) {
-        return null;
+
+        Ingredient updatedIngredient = null;
+
+        if (ingredientRepository.findById(id).isPresent()) {
+            updatedIngredient = ingredientRepository.findById(id).get();
+            if (quantity < 0) {
+                updatedIngredient.setName("Invalid quantity");
+                return updatedIngredient;
+            }
+            return updatedIngredient;
+
+        }
+        return updatedIngredient;
     }
+
 }
+
