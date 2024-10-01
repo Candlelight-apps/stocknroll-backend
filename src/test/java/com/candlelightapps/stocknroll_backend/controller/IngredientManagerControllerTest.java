@@ -218,8 +218,6 @@ class IngredientManagerControllerTest {
     @DisplayName("Returns 400 Bad Request when quantity of matched ingredient is set to less than zero.")
     public void testUpdateIngredient_WhenQuantityOfIngredientSetLessThanZero() throws Exception {
 
-        nullIngredient = null;
-
         when(mockIngredientMangerServiceImpl.updateIngredient(1L, -1)).thenReturn(invalidIngredientQty);
 
         this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/1")
