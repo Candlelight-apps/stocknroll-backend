@@ -11,4 +11,6 @@ public interface RecipeManagerService {
     Recipe addRecipe(Recipe recipe);
 
     ArrayList<Result> getRecipeByCriteria(String cuisine, String diet, String intolerance);
+
+    String deleteRecipeById(Long recipeId);
 }

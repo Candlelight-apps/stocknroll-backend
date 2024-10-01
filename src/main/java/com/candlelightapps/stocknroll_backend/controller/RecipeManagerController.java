@@ -40,4 +40,9 @@ public class RecipeManagerController {
 
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
+
+    @DeleteMapping("/recipes/{id}")
+    public ResponseEntity<String> deleteRecipeById(@PathVariable("id") Long recipeId) {
+        return new ResponseEntity<>(recipeManagerService.deleteRecipeById(recipeId), HttpStatus.OK);
+    }
 }
