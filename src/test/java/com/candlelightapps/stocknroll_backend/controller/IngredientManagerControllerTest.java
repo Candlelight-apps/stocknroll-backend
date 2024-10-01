@@ -160,4 +160,21 @@ class IngredientManagerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
     }
+
+    @Test
+    @DisplayName("Returns 404 Not Found error when passed id of ingredient that is not found.")
+    public void testUpdateIngredient_WhenIdOfIngredientNotFound() throws Exception {
+
+        nullIngredient = null;
+
+        when(mockIngredientMangerServiceImpl.updateIngredient(1L, 2)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.patch("/api/v1/stocknroll/ingredients/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(2)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
+
+    }
 }

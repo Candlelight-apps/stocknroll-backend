@@ -54,4 +54,9 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
         return ingredientAdded;
     }
+
+    @Override
+    public Ingredient updateIngredient(Long id, Integer quantity) {
+        return null;
+    }
 }

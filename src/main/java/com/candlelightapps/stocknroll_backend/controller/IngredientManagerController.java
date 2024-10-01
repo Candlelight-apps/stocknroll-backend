@@ -34,4 +34,10 @@ public class IngredientManagerController {
         return new ResponseEntity<>(ingredientAdded, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Ingredient> updateIngredient(@PathVariable Long id, @RequestBody Integer quantity) {
+        Ingredient updatedIngredient = ingredientManagerService.updateIngredient(id, quantity);
+        return new ResponseEntity<>(updatedIngredient, HttpStatus.NOT_FOUND);
+    }
+
 }
