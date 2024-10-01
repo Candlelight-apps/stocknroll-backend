@@ -27,9 +27,9 @@ public class IngredientManagerController {
     @PostMapping
     public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
         Ingredient ingredientAdded = ingredientManagerService.addIngredient(ingredient);
-        Ingredient nullIngredient = null;
+
         if (ingredientAdded == null) {
-            return new ResponseEntity<>(nullIngredient, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(ingredientAdded, HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(ingredientAdded, HttpStatus.CREATED);
     }
