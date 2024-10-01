@@ -2,16 +2,17 @@ package com.candlelightapps.stocknroll_backend.controller;
 
 
 import com.candlelightapps.stocknroll_backend.model.Recipe;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.recipeByCriteria.Result;
 import com.candlelightapps.stocknroll_backend.service.RecipeManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @RestController
@@ -29,4 +30,13 @@ public class RecipeManagerController {
         return new ResponseEntity<>(newRecipe, httpHeaders, HttpStatus.CREATED);
     }
 
+    @GetMapping("/recipes/{criteria}")
+    public ResponseEntity<List<Result>> getRecipesByCriteria(@PathVariable("cuisine") String cuisine,
+                                                             @PathVariable("diet") String diet,
+                                                             @PathVariable("intolerances") String intolerance) {
+
+        List<Result> recipes = recipeManagerService.getRecipeByCriteria(cuisine, diet, intolerance);
+
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
 }

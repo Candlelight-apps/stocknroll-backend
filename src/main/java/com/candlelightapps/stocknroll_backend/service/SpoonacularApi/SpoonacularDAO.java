@@ -24,7 +24,7 @@ public class SpoonacularDAO {
         intolerances = intolerances==null? "":intolerances;
 
         Data result = client.get()
-                .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&cuisine=" + cuisine + "&diet=" + diet + "&intolerances=" + intolerances)
+                .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&cuisine=" + cuisine + "&diet=" + diet + "&intolerances=" + intolerances + "&addRecipeInformation=true")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve().bodyToMono(Data.class).block();
         return result;
@@ -32,7 +32,7 @@ public class SpoonacularDAO {
     public static Data getRecipesByIngredients(String ingredients) {
         ingredients = ingredients==null? "":ingredients;
         Data result = client.get()
-                .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&includeIngredients=" + ingredients)
+                .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&includeIngredients=" + ingredients + "&addRecipeInformation=true")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve().bodyToMono(Data.class).block();
         return result;

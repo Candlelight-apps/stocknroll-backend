@@ -15,6 +15,8 @@ class SpoonacularDAOTest {
         String intolerances = "";
 
         var data = SpoonacularDAO.getRecipesByCriteria(cuisine,diet,intolerances);
+        System.out.println("\ngetRecipesByCriteriaTest_EmptyStrings: Return 10 recipes for all input parameters empty");
+        data.results().forEach(System.out::println);
         assertEquals(10,data.results().size());
     }
     @Test
@@ -25,6 +27,8 @@ class SpoonacularDAOTest {
         String intolerances = "Egg";
 
         var data = SpoonacularDAO.getRecipesByCriteria(cuisine,diet,intolerances);
+        System.out.println("\ngetRecipesByCriteriaTest_validInputs:Return 10 recipes for valid inputs");
+        data.results().forEach(System.out::println);
         assertEquals(10,data.results().size());
     }
     @Test
@@ -73,6 +77,7 @@ class SpoonacularDAOTest {
     void getRecipesByIngredientsTest_null() {
         String ingredients = null;
         var data = SpoonacularDAO.getRecipesByIngredients(ingredients);
+
         assertEquals(10,data.results().size());
     }
     @Test
@@ -87,6 +92,8 @@ class SpoonacularDAOTest {
     void getRecipesByIngredientsTest_commaSeparated() {
         String ingredients = "cheese,egg,tomato";
         var data = SpoonacularDAO.getRecipesByIngredients(ingredients);
+        System.out.println("\ngetRecipesByIngredientsTest_commaSeparated:Return 10 recipes for valid inputs");
+        data.results().forEach(System.out::println);
         assertEquals(10,data.results().size());
     }
 
