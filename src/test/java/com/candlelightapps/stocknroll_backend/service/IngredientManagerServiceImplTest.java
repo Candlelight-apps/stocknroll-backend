@@ -1,7 +1,9 @@
 package com.candlelightapps.stocknroll_backend.service;
 
+import com.candlelightapps.stocknroll_backend.exception.ParameterNotDefinedException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,9 @@ class IngredientManagerServiceImplTest {
     Ingredient canOfTomatoes;
     Ingredient cornflakes;
     Ingredient bread;
+    Ingredient invalidIngredient;
+    Ingredient expiredIngredient;
+    Ingredient nullIngredient;
 
     @BeforeEach
     public void setup() {
@@ -56,6 +61,21 @@ class IngredientManagerServiceImplTest {
                 .quantity(1)
                 .expiryDate(LocalDate.of(2024,10,11))
                 .build();
+
+        invalidIngredient = Ingredient.builder()
+                .name("")
+                .category("Dairy")
+                .quantity(1)
+                .build();
+
+        expiredIngredient = Ingredient.builder()
+                .name("Smelly cheese")
+                .category("Dairy")
+                .quantity(1)
+                .expiryDate(LocalDate.of(1986, 4, 26))
+                .build();
+
+        nullIngredient = null;
 
     }
 
@@ -85,6 +105,54 @@ class IngredientManagerServiceImplTest {
         List<Ingredient> actualResults = ingredientManagerServiceImpl.getAllIngredients();
 
         assertEquals(ingredientList, actualResults);
+
+    }
+
+    @Test
+    @DisplayName("Returns ingredient that was posted when passed valid ingredient object")
+    public void testAddIngredient_WhenPassedValidIngredient() {
+
+        when(mockIngredientRepository.save(canOfTomatoes)).thenReturn(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        verify(mockIngredientRepository, times(1)).save(canOfTomatoes);
+        assertEquals(canOfTomatoes, result);
+    }
+
+    @Test
+    @DisplayName("Returns null ingredient when passed invalid ingredient object")
+    public void testAddIngredient_WhenPassedInvalidIngredient() {
+
+        when(mockIngredientRepository.save(invalidIngredient)).thenReturn(invalidIngredient);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(invalidIngredient);
+
+        assertNull(result);
+
+    }
+
+    @Test
+    @DisplayName("Returns null ingredient when passed ingredient object with expiry date in the past")
+    public void testAddIngredient_WhenIngredientExpiryDateExceed() {
+
+        when(mockIngredientRepository.save(expiredIngredient)).thenReturn(expiredIngredient);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(expiredIngredient);
+
+        assertNull(result);
+
+    }
+
+    @Test
+    @DisplayName("Returns null ingredient when passed null ingredient object")
+    public void testAddIngredient_WhenIngredientIsNull() {
+
+        when(mockIngredientRepository.save(nullIngredient)).thenReturn(nullIngredient);
+
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(nullIngredient);
+
+        assertNull(result);
 
     }
 }

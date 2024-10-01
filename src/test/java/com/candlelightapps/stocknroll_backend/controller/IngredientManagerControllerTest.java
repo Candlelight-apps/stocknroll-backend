@@ -2,6 +2,9 @@ package com.candlelightapps.stocknroll_backend.controller;
 
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.service.IngredientManagerServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,12 +13,14 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.awt.*;
 import java.rmi.server.ExportException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,21 +43,28 @@ class IngredientManagerControllerTest {
     @Autowired
     private MockMvc mockMvcController;
 
+    private ObjectMapper mapper;
+
     List<Ingredient> ingredientList = new ArrayList<>();
     Ingredient canOfTomatoes;
     Ingredient cornflakes;
     Ingredient bread;
+    Ingredient invalidIngredient;
+    Ingredient nullIngredient;
 
     @BeforeEach
     public void setup() {
         mockMvcController = MockMvcBuilders.standaloneSetup(ingredientManagerController).build();
+
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
 
         canOfTomatoes = Ingredient.builder()
                 .id(1L)
                 .name("Can of tomatoes")
                 .category("Vegetables")
                 .quantity(4)
-                .expiryDate(LocalDate.of(2025,12,31))
+                .expiryDate(LocalDate.of(2025, 12, 31))
                 .build();
 
         cornflakes = Ingredient.builder()
@@ -60,7 +72,7 @@ class IngredientManagerControllerTest {
                 .name("Cornflakes")
                 .category("Breakfast cereals")
                 .quantity(1)
-                .expiryDate(LocalDate.of(2025,5,31))
+                .expiryDate(LocalDate.of(2025, 5, 31))
                 .build();
 
         bread = Ingredient.builder()
@@ -68,9 +80,13 @@ class IngredientManagerControllerTest {
                 .name("Wholemeal bread")
                 .category("Bread")
                 .quantity(1)
-                .expiryDate(LocalDate.of(2024,10,11))
+                .expiryDate(LocalDate.of(2024, 10, 11))
                 .build();
 
+        invalidIngredient = Ingredient.builder()
+                .category("dairy")
+                .quantity(1)
+                .build();
     }
 
     @Test
@@ -81,7 +97,7 @@ class IngredientManagerControllerTest {
 
         when(mockIngredientMangerServiceImpl.getAllIngredients()).thenReturn(ingredientList);
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/ingredients"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/stocknroll/ingredients"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().string(""));
@@ -98,7 +114,7 @@ class IngredientManagerControllerTest {
 
         when(mockIngredientMangerServiceImpl.getAllIngredients()).thenReturn(ingredientList);
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/ingredients"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/stocknroll/ingredients"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
@@ -111,5 +127,37 @@ class IngredientManagerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Wholemeal bread"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].quantity").value(1));
 
+    }
+
+    @Test
+    @DisplayName("Returns JSON of new ingredient to be posted and returns HTTP CREATED when passed valid JSON.")
+    public void testAddIngredient_WithValidJSON() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.addIngredient(canOfTomatoes)).thenReturn(canOfTomatoes);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/stocknroll/ingredients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(canOfTomatoes)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(mockIngredientMangerServiceImpl, times(1)).addIngredient(canOfTomatoes);
+
+    }
+
+    @Test
+    @DisplayName("Returns 400 Bad Request error when invalid JSON submitted as part of POST request")
+    public void testAddIngredient_insertAlbum_WithJSONMissingRequiredFields() throws Exception {
+
+        nullIngredient = null;
+
+        when(mockIngredientMangerServiceImpl.addIngredient(invalidIngredient)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/stocknroll/ingredients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(invalidIngredient)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
     }
 }
