@@ -216,4 +216,18 @@ class IngredientManagerServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Returns null ingredient object when no match found for ingredient id.")
+    public void testDeleteIngredient_WhenMatchNoFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(10L)).thenReturn(null);
+
+        Ingredient result = ingredientManagerServiceImpl.deleteIngredient(10L);
+
+        verify(mockIngredientRepository, times(1)).findById(10L);
+        verify(mockIngredientRepository, times(0)).deleteById(10L);
+        assertNull(result);
+
+    }
+
 }

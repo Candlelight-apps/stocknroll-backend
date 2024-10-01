@@ -92,12 +92,23 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
         Ingredient deletedIngredient = new Ingredient();
 
-        if (ingredientRepository.findById(id).isPresent()) {
-            deletedIngredient = ingredientRepository.findById(id).get();
-            ingredientRepository.deleteById(id);
+        try {
+            try {
+                if (ingredientRepository.findById(id).isPresent()) {
+                    deletedIngredient = ingredientRepository.findById(id).get();
+                    ingredientRepository.deleteById(id);
+
+                }
+            } catch (NullPointerException e) {
+                throw new ItemNotFoundException("No ingredient found with that id");
+
+            }
+        } catch (ItemNotFoundException e) {
+            deletedIngredient = null;
 
         }
      return deletedIngredient;
+
     }
 }
 
