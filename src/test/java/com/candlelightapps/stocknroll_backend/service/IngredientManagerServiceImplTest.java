@@ -172,4 +172,18 @@ class IngredientManagerServiceImplTest {
                 () -> assertEquals(1, result.getQuantity()));
 
     }
+
+    @Test
+    @DisplayName("Returns null ingredient when no match found by ingredient id.")
+    public void testUpdateIngredient_WhenMatchNoFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(2L)).thenReturn(null);
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(2L, 10);
+
+        assertNull(result);
+
+    }
+
 }
