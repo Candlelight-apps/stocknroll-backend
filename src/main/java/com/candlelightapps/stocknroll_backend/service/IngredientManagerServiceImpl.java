@@ -28,7 +28,7 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
         Ingredient ingredientAdded;
 
         try {
-            if (ingredient.getName() == null || ingredient.getCategory() == null) {
+            if (ingredient.getName() == null || ingredient.getCategory() == null || ingredient.getExpiryDate() == null) {
                 throw new NullPointerException("One or more ingredient fields are null");
             }
 
