@@ -248,4 +248,17 @@ class IngredientManagerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Returns 404 Not Found and empty JSON object ingredient when id of ingredient not found.")
+    public void testDeleteIngredient_WhenIdOfIngredientNotFound() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.deleteIngredient(10L)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/stocknroll/ingredients/10"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
+
+    }
+
 }
