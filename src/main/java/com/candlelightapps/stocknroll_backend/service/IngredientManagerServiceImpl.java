@@ -66,6 +66,8 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
                 updatedIngredient.setName("Invalid quantity");
                 return updatedIngredient;
             }
+            updatedIngredient.setQuantity(quantity);
+            ingredientRepository.save(updatedIngredient);
             return updatedIngredient;
 
         }

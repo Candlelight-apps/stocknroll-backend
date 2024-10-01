@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -153,6 +154,22 @@ class IngredientManagerServiceImplTest {
         Ingredient result = ingredientManagerServiceImpl.addIngredient(nullIngredient);
 
         assertNull(result);
+
+    }
+
+    @Test
+    @DisplayName("Returns ingredient with updated quantity when match found for ingredient id.")
+    public void testUpdateIngredient_WhenMatchFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(1L, 1);
+
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("Can of tomatoes", result.getName()),
+                () -> assertEquals(1, result.getQuantity()));
 
     }
 }
