@@ -2,7 +2,7 @@ package com.candlelightapps.stocknroll_backend.controller;
 
 
 import com.candlelightapps.stocknroll_backend.model.Recipe;
-import com.candlelightapps.stocknroll_backend.model.spoonacular.recipeByCriteria.Result;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.service.RecipeManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
