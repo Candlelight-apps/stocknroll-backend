@@ -1,7 +1,8 @@
 package com.candlelightapps.stocknroll_backend.service;
 
 import com.candlelightapps.stocknroll_backend.model.Recipe;
-import com.candlelightapps.stocknroll_backend.model.spoonacular.recipeByCriteria.Result;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
+
 
 import java.util.ArrayList;
 

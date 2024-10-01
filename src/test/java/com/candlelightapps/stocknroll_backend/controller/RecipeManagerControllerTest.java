@@ -1,7 +1,8 @@
 package com.candlelightapps.stocknroll_backend.controller;
 
 import com.candlelightapps.stocknroll_backend.model.Recipe;
-import com.candlelightapps.stocknroll_backend.model.spoonacular.recipeByCriteria.Result;
+
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.service.RecipeManagerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -82,9 +83,9 @@ class RecipeManagerControllerTest {
                 .sourceUrl("https://www.foodista.com/recipe/KV6GLYDK/lemony-greek-lentil-soup")
                 .build();
 
-        japaneseVeganGluten = new Result(648487,"Japanese Pickles", "https://img.spoonacular.com/recipes/648487-312x231.jpg", "jpg");
-        japaneseVeganGluten2 = new Result(665496, "Yakitori Glaze", "https://img.spoonacular.com/recipes/665496-312x231.jpg", "jpg");
-        japaneseVeganGluten3 = new Result(37513,"Japanese Salad Dressing", "https://img.spoonacular.com/recipes/37513-312x231.jpg", "jpg");
+        japaneseVeganGluten = new Result(648487,"Japanese Pickles", "https://img.spoonacular.com/recipes/648487-312x231.jpg", "jpg", 45, "http://www.foodista.com/recipe/HBL5F77J/japanese-pickles");
+        japaneseVeganGluten2 = new Result(665496, "Yakitori Glaze", "https://img.spoonacular.com/recipes/665496-312x231.jpg", "jpg", 45, "https://spoonacular.com/yakitori-glaze-665496");
+        japaneseVeganGluten3 = new Result(37513,"Japanese Salad Dressing", "https://img.spoonacular.com/recipes/37513-312x231.jpg", "jpg", 12, "https://spoonacular.com/japanese-salad-dressing-37513");
 
     }
 
