@@ -96,4 +96,16 @@ class RecipeManagerServiceImplTest {
         }
     }
 
+    @Test
+    @DisplayName("Test Delete Recipe throws an exception with an Invalid Id ")
+    public void testDeleteRecipeByIdThrowsItemNotFoundException() {
+        Exception exception = assertThrows(ItemNotFoundException.class, () -> {
+            recipeManagerServiceImpl.deleteRecipeById(999999999999999L);;
+        });
+
+        String expectedMessage = "Recipe with id 999999999999999 cannot be found to be deleted";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
 }

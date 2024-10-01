@@ -105,6 +105,17 @@ class RecipeManagerControllerTest {
 
         verify(mockRecipeManagerServiceImpl, times(1)).addRecipe(recipe);
     }
+
+    @Test
+    @DisplayName("Test delete of a recipe by a given Id")
+    public void testDeleteRecipeById() throws Exception {
+        Long recipeId = 664737L;
+        String returnMsg = String.format("Recipe with id %s has been deleted successfully", recipeId);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/stocknroll/recipes/{id}", recipeId))
+                .andExpect(status().isOk());
+    }
 /*
     @Test
     @DisplayName("Test Get recipes for a given criteria")
