@@ -86,5 +86,11 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
         }
         return updatedIngredient;
     }
+
+    @Override
+    public Ingredient deleteIngredient(Long id) {
+
+     return null;
+    }
 }
 
