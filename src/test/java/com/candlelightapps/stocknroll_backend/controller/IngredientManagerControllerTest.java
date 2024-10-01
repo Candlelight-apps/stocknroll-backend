@@ -146,7 +146,7 @@ class IngredientManagerControllerTest {
     }
 
     @Test
-    @DisplayName("Returns 406 Not Acceptable error when invalid JSON submitted as part of POST request")
+    @DisplayName("Returns 400 Bad Request error when invalid JSON submitted as part of POST request")
     public void testAddIngredient_insertAlbum_WithJSONMissingRequiredFields() throws Exception {
 
         nullIngredient = null;
