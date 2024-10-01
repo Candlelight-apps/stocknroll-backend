@@ -186,4 +186,17 @@ class IngredientManagerServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Returns null ingredient when quantity passed is less than zero.")
+    public void testUpdateIngredient_WhenQuantityPassLessThanZero() {
+
+        when(mockIngredientRepository.findById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
+        ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
+
+        Ingredient result = ingredientManagerServiceImpl.updateIngredient(1L, -1);
+
+        assertNull(result);
+
+    }
+
 }
