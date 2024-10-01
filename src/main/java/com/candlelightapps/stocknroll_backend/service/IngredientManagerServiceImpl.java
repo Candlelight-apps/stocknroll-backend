@@ -68,7 +68,6 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
 
                     if (quantity < 0) {
                         updatedIngredient.setName("Invalid quantity");
-                        updatedIngredient = null;
                         return updatedIngredient;
 
                     }

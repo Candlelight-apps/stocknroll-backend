@@ -195,7 +195,10 @@ class IngredientManagerServiceImplTest {
 
         Ingredient result = ingredientManagerServiceImpl.updateIngredient(1L, -1);
 
-        assertNull(result);
+        assertAll(
+                () -> assertEquals(1L, result.getId()),
+                () -> assertEquals("Invalid quantity", result.getName()),
+                () -> assertEquals(4, result.getQuantity()));
 
     }
 
