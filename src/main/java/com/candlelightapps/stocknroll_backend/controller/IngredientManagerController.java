@@ -29,7 +29,7 @@ public class IngredientManagerController {
         Ingredient ingredientAdded = ingredientManagerService.addIngredient(ingredient);
 
         if (ingredientAdded == null) {
-            return new ResponseEntity<>(ingredientAdded, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(ingredientAdded, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(ingredientAdded, HttpStatus.CREATED);
     }
