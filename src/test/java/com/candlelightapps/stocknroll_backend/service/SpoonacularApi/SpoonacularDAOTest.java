@@ -1,6 +1,5 @@
 package com.candlelightapps.stocknroll_backend.service.SpoonacularApi;
 
-import com.candlelightapps.stocknroll_backend.model.spoonacular.recipeByCriteria.Data;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -68,4 +67,27 @@ class SpoonacularDAOTest {
         var data = SpoonacularDAO.getRecipesByCriteria(cuisine,diet,intolerances);
         assertEquals(10,data.results().size());
     }
+
+    @Test
+    @DisplayName("Return 10 recipes for null values")
+    void getRecipesByIngredientsTest_null() {
+        String ingredients = null;
+        var data = SpoonacularDAO.getRecipesByIngredients(ingredients);
+        assertEquals(10,data.results().size());
+    }
+    @Test
+    @DisplayName("Return 10 recipes for valid input")
+    void getRecipesByIngredientsTest_valid_plusSign() {
+        String ingredients = "cheese,+egg";
+        var data = SpoonacularDAO.getRecipesByIngredients(ingredients);
+        assertEquals(10,data.results().size());
+    }
+    @Test
+    @DisplayName("Return 10 recipes for valid input")
+    void getRecipesByIngredientsTest_commaSeparated() {
+        String ingredients = "cheese,egg,tomato";
+        var data = SpoonacularDAO.getRecipesByIngredients(ingredients);
+        assertEquals(10,data.results().size());
+    }
+
 }
