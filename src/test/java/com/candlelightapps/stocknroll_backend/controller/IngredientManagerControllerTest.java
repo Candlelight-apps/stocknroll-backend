@@ -156,7 +156,7 @@ class IngredientManagerControllerTest {
         this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/stocknroll/ingredients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(invalidIngredient)))
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
     }
