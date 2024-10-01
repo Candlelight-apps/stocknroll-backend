@@ -202,4 +202,18 @@ class IngredientManagerServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Returns ingredient deleted when match found for ingredient id.")
+    public void testDeleteIngredient_WhenMatchFoundForIngredientId() {
+
+        when(mockIngredientRepository.findById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
+
+        Ingredient result = ingredientManagerServiceImpl.deleteIngredient(1L);
+
+        verify(mockIngredientRepository, times(2)).findById(1L);
+        verify(mockIngredientRepository, times(1)).deleteById(1L);
+        assertEquals(canOfTomatoes, result);
+
+    }
+
 }

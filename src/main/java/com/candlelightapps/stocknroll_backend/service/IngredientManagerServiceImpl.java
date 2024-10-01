@@ -90,7 +90,14 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
     @Override
     public Ingredient deleteIngredient(Long id) {
 
-     return null;
+        Ingredient deletedIngredient = new Ingredient();
+
+        if (ingredientRepository.findById(id).isPresent()) {
+            deletedIngredient = ingredientRepository.findById(id).get();
+            ingredientRepository.deleteById(id);
+
+        }
+     return deletedIngredient;
     }
 }
 
