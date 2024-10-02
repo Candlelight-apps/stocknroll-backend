@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RecipeManagerServiceImpl implements RecipeManagerService {
@@ -20,6 +21,7 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
+
         return recipeManagerRepository.save(recipe);
     }
 
@@ -31,6 +33,18 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
             return recipeData.results();
         } else {
             throw new ItemNotFoundException("No recipes found matching criteria.");
+        }
+    }
+
+    @Override
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        recipeManagerRepository.findAll().forEach(recipes::add);
+
+        if(!recipes.isEmpty()) {
+            return recipes;
+        } else {
+            throw new ItemNotFoundException("There are no saved recipes!");
         }
     }
 }
