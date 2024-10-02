@@ -17,4 +17,5 @@ public interface RecipeManagerService {
 
     List<Recipe> getAllRecipes();
 
+    ArrayList<Result> getRecipesByIngredient(ArrayList<String> ingredients);
 }
