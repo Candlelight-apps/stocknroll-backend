@@ -1,6 +1,6 @@
 package com.candlelightapps.stocknroll_backend.service;
 
-import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
+import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;when(mockIngredientRepository.deleteById(1L)).thenReturn(Optional.ofNullable(canOfTomatoes));
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+
 import java.util.Optional;
+
+import java.util.List;
+
 
 @Service
 public class RecipeManagerServiceImpl implements RecipeManagerService {
@@ -22,6 +26,7 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
+
         return recipeManagerRepository.save(recipe);
     }
 
@@ -45,6 +50,18 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
             return String.format("Recipe with id %s has been deleted successfully", recipeId);
         } else {
             throw new ItemNotFoundException(String.format("Recipe with id %s cannot be found to be deleted", recipeId));
+        }
+    }
+      
+    @Override  
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        recipeManagerRepository.findAll().forEach(recipes::add);
+
+        if(!recipes.isEmpty()) {
+            return recipes;
+        } else {
+            throw new ItemNotFoundException("There are no saved recipes!");
         }
     }
 }
