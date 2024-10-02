@@ -121,7 +121,10 @@ class RecipeManagerControllerTest {
         when(mockRecipeManagerServiceImpl.getRecipeByCriteria("1", "1", "1")).thenReturn(recipeAL);
 
        this.mockMvcController.perform(MockMvcRequestBuilders
-               .get("/api/v1/stocknroll/recipes/criteria?cuisine=&diet=1&intolerances=1")
+                       .get("/api/v1/stocknroll/recipes/criteria?")
+                       .param("cuisine","1")
+                       .param("diet","1")
+                       .param("intolerance","1")
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(MockMvcResultMatchers.status().isNotFound())
                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -130,7 +133,27 @@ class RecipeManagerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Test Get recipes for a given criteria")
+    public void testGetRecipesByValidCriteria() throws Exception {
+        ArrayList<Result> recipeAL = new ArrayList<>();
+        recipeAL.add(japaneseVeganGluten);
+        recipeAL.add(japaneseVeganGluten2);
 
+        when(mockRecipeManagerServiceImpl.getRecipeByCriteria("japanese", "vegan", "gluten")).thenReturn(recipeAL);
+        this.mockMvcController.perform(MockMvcRequestBuilders
+                        .get("/api/v1/stocknroll/recipes/criteria?")
+                        .param("cuisine","japanese")
+                        .param("diet","vegan")
+                        .param("intolerance","gluten")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Japanese Pickles"))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(665496L))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Yakitori Glaze"));
+    }
 
 
 }

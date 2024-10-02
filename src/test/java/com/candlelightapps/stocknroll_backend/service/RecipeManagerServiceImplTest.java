@@ -82,6 +82,7 @@ class RecipeManagerServiceImplTest {
                 .getRecipeByCriteria("japanese", "vegan", "gluten");
 
         assertEquals(recipeList.size(), actualResults.size());
+
     }
 
     @Test
