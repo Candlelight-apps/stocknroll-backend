@@ -239,4 +239,26 @@ class RecipeManagerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").doesNotExist());
 
     }
+    @Test
+    @DisplayName("Return recipes for empty input")
+    void testGetRecipesByIngredient_emptyInput() throws Exception {
+        ArrayList<Result> recipeAL = new ArrayList<>();
+        recipeAL.add(japaneseVeganGluten);
+        recipeAL.add(japaneseVeganGluten2);
+        ArrayList<String> ingredientsList = new ArrayList<>();
+        String ingredients = "";
+
+        when(mockRecipeManagerServiceImpl.getRecipesByIngredient(ingredientsList)).thenReturn(recipeAL);
+        this.mockMvcController.perform(MockMvcRequestBuilders
+                        .get("/api/v1/stocknroll/recipes/ingredient?")
+                        .param("values",ingredients)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Japanese Pickles"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(665496L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Yakitori Glaze"));
+
+    }
 }
