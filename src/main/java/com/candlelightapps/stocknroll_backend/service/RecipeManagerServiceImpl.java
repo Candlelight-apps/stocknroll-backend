@@ -40,11 +40,14 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
     public String deleteRecipeById(Long recipeId) {
         Optional<Recipe> recipe = recipeManagerRepository.findById(recipeId);
 
-        if(recipe.isPresent()) {
-            recipeManagerRepository.deleteById(recipeId);
-            return String.format("Recipe with id %s has been deleted successfully", recipeId);
-        } else {
+        try {
+            if (recipe.isPresent()) {
+                recipeManagerRepository.deleteById(recipeId);
+                return String.format("Recipe with id %s has been deleted successfully", recipeId);
+            }
+        } catch (NullPointerException ne) {
             throw new ItemNotFoundException(String.format("Recipe with id %s cannot be found to be deleted", recipeId));
         }
+        return null;
     }
 }
