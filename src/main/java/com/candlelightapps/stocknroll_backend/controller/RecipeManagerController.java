@@ -47,6 +47,12 @@ public class RecipeManagerController {
 
     }
 
+
+    @DeleteMapping("/recipes/{id}")
+    public ResponseEntity<String> deleteRecipeById(@PathVariable("id") Long recipeId) {
+        return new ResponseEntity<>(recipeManagerService.deleteRecipeById(recipeId), HttpStatus.OK);
+    }
+ 
     @GetMapping("/recipes")
     public ResponseEntity<List<Recipe>> getAllRecipes() {
         List<Recipe> recipes = recipeManagerService.getAllRecipes();

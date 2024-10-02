@@ -12,5 +12,9 @@ public interface RecipeManagerService {
 
     ArrayList<Result> getRecipeByCriteria(String cuisine, String diet, String intolerance);
 
+
+    String deleteRecipeById(Long recipeId);
+
     List<Recipe> getAllRecipes();
+
 }
