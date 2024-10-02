@@ -1,6 +1,7 @@
 package com.candlelightapps.stocknroll_backend.controller;
 
 
+import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
@@ -31,14 +32,19 @@ public class RecipeManagerController {
         return new ResponseEntity<>(newRecipe, httpHeaders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/recipes/{criteria}")
-    public ResponseEntity<List<Result>> getRecipesByCriteria(@PathVariable("cuisine") String cuisine,
-                                                             @PathVariable("diet") String diet,
-                                                             @PathVariable("intolerances") String intolerance) {
+    @GetMapping("/recipes/criteria")
+    public ResponseEntity<List<Result>> getRecipesByCriteria(@RequestParam(defaultValue = "") String cuisine,
+                                                             @RequestParam(defaultValue = "") String diet,
+                                                             @RequestParam(defaultValue = "") String intolerance) {
 
         ArrayList<Result> recipes = recipeManagerService.getRecipeByCriteria(cuisine, diet, intolerance);
 
-        return new ResponseEntity<>(recipes, HttpStatus.OK);
+        if(!recipes.isEmpty()) {
+            return new ResponseEntity<>(recipes, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(recipes, HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/recipes")
