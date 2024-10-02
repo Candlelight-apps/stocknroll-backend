@@ -34,6 +34,6 @@ public class Recipe {
     String image;
 
     @Column
-    boolean isFavourite;
+    boolean favourite;
 
 }
