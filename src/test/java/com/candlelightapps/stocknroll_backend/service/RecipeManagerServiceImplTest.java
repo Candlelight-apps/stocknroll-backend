@@ -180,5 +180,27 @@ class RecipeManagerServiceImplTest {
 
         }
     }
+    @Test
+    @DisplayName("Return recipes for null input")
+    void testGetRecipesByIngredient_nullInput() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredientsList = null;
+
+        String ingredients = "";
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients(ingredients)).thenReturn(data);
+            assertEquals(3, SpoonacularDAO.getRecipesByIngredients(ingredients).results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredientsList);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+    }
 }
 
