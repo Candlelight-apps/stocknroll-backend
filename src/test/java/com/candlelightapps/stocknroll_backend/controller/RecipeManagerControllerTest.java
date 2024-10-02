@@ -224,14 +224,8 @@ class RecipeManagerControllerTest {
     @Test
     @DisplayName("Return 404 NOT_FOUND for null input")
     void testGetRecipesByIngredient_nullInput() throws Exception {
-        ArrayList<Result> recipeAL = new ArrayList<>();
-        recipeAL.add(japaneseVeganGluten);
-        recipeAL.add(japaneseVeganGluten2);
-
-        ArrayList<String> ingredientsList = new ArrayList<>();
-        ingredientsList.add("Beef");
-        ingredientsList.add("egg");
-        ingredientsList.add("tomatoes");
+        ArrayList<Result> recipeAL = null;
+        ArrayList<String> ingredientsList = null;
         String ingredients = null;
 
         when(mockRecipeManagerServiceImpl.getRecipesByIngredient(ingredientsList)).thenReturn(recipeAL);
