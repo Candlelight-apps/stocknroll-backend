@@ -34,3 +34,4 @@ build/
 
 ### Properties Files ###
 *.properties
+/src/main/resources/*.properties

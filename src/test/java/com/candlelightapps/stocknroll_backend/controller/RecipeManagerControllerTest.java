@@ -3,8 +3,10 @@ package com.candlelightapps.stocknroll_backend.controller;
 import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.service.RecipeManagerServiceImpl;
+import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.SpoonacularDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +21,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
@@ -33,6 +37,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import static org.hamcrest.Matchers.hasSize;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -137,6 +144,7 @@ class RecipeManagerControllerTest {
 
         when(mockRecipeManagerServiceImpl.deleteRecipeById(recipeId)).thenReturn(returnMsg);
 
+
         this.mockMvcController.perform(
                         MockMvcRequestBuilders.delete("/api/v1/stocknroll/recipes/{id}", recipeId))
                 .andExpect(status().isOk())
@@ -144,5 +152,47 @@ class RecipeManagerControllerTest {
                 .andDo(print());
 
         verify(mockRecipeManagerServiceImpl, times(1)).deleteRecipeById(recipeId);
+    }
+  
+    @Test
+    @DisplayName("Return 404 Not Found for invalid inputs")
+    public void testGetRecipesByInValidCriteria() throws Exception {
+
+        ArrayList<Result> recipeAL = new ArrayList<>();
+        when(mockRecipeManagerServiceImpl.getRecipeByCriteria("1", "1", "1")).thenReturn(recipeAL);
+
+       this.mockMvcController.perform(MockMvcRequestBuilders
+                       .get("/api/v1/stocknroll/recipes/criteria?")
+                       .param("cuisine","1")
+                       .param("diet","1")
+                       .param("intolerance","1")
+                       .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(MockMvcResultMatchers.status().isNotFound())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+               .andDo(print())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").doesNotExist());
+
+    }
+
+    @Test
+    @DisplayName("Test Get recipes for a given criteria")
+    public void testGetRecipesByValidCriteria() throws Exception {
+        ArrayList<Result> recipeAL = new ArrayList<>();
+        recipeAL.add(japaneseVeganGluten);
+        recipeAL.add(japaneseVeganGluten2);
+
+        when(mockRecipeManagerServiceImpl.getRecipeByCriteria("japanese", "vegan", "gluten")).thenReturn(recipeAL);
+        this.mockMvcController.perform(MockMvcRequestBuilders
+                        .get("/api/v1/stocknroll/recipes/criteria?")
+                        .param("cuisine","japanese")
+                        .param("diet","vegan")
+                        .param("intolerance","gluten")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Japanese Pickles"))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(665496L))
+               .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Yakitori Glaze"));
     }
 }

@@ -48,4 +48,15 @@ public class IngredientManagerController {
         return new ResponseEntity<>(updatedIngredient, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Ingredient> deleteIngredient(@PathVariable Long id) {
+        Ingredient deletedIngredient = ingredientManagerService.deleteIngredient(id);
+
+        if (deletedIngredient == null) {
+            return new ResponseEntity<>(deletedIngredient, HttpStatus.NOT_FOUND);
+
+        }
+        return new ResponseEntity<>(deletedIngredient, HttpStatus.OK);
+    }
+
 }
