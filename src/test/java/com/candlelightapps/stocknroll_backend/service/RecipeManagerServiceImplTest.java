@@ -40,7 +40,7 @@ class RecipeManagerServiceImplTest {
                 .recipeId(715769L)
                 .title("Broccolini Quinoa Pilaf")
                 .image("https://img.spoonacular.com/recipes/715769-312x231.jpg")
-                .isFavourite(true)
+                .favourite(true)
                 .readyInMinutes(30)
                 .sourceUrl("https://pickfreshfoods.com/broccolini-quinoa-pilaf/")
                 .build();
@@ -50,7 +50,7 @@ class RecipeManagerServiceImplTest {
                 .recipeId(648275L)
                 .title("Italian Tomato and Mozzarella Caprese")
                 .image("https://img.spoonacular.com/recipes/648275-312x231.jpg")
-                .isFavourite(true)
+                .favourite(true)
                 .readyInMinutes(45)
                 .sourceUrl("https://www.foodista.com/recipe/MK4TM4WZ/italian-tomato-and-mozzarella-caprese")
                 .build();
@@ -60,7 +60,7 @@ class RecipeManagerServiceImplTest {
                 .recipeId(649886L)
                 .title("Lemony Greek Lentil Soup")
                 .image("https://img.spoonacular.com/recipes/649886-312x231.jpg")
-                .isFavourite(true)
+                .favourite(true)
                 .readyInMinutes(45)
                 .sourceUrl("https://www.foodista.com/recipe/KV6GLYDK/lemony-greek-lentil-soup")
                 .build();
