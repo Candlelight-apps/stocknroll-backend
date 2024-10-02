@@ -4,13 +4,17 @@ import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.repository.RecipeManagerRepository;
+import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.SpoonacularDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
@@ -128,4 +132,30 @@ class RecipeManagerServiceImplTest {
 
         assertTrue(actualMsg.contains(expectedMessage));
     }
-}
+
+    @Test
+    @DisplayName("Return recipes for 1 valid ingredient")
+    void testGetRecipesByIngredient_1validIngredient() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredients = new ArrayList<>(List.of("Beef"));
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients("Beef"))
+                    .thenReturn(data);
+            assertEquals(3,SpoonacularDAO.getRecipesByIngredients("Beef").results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredients);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+
+
+
+
+    }}
+
