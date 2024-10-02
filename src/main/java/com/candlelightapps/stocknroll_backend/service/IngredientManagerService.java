@@ -11,4 +11,6 @@ public interface IngredientManagerService {
     Ingredient addIngredient(Ingredient ingredient);
 
     Ingredient updateIngredient(Long id, Integer quantity);
+
+    Ingredient deleteIngredient(Long id);
 }

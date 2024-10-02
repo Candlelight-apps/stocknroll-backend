@@ -46,4 +46,11 @@ public class RecipeManagerController {
         }
 
     }
+
+    @GetMapping("/recipes")
+    public ResponseEntity<List<Recipe>> getAllRecipes() {
+        List<Recipe> recipes = recipeManagerService.getAllRecipes();
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+
+    }
 }

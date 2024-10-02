@@ -226,9 +226,38 @@ class IngredientManagerControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(4));;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(4));
 
         verify(mockIngredientMangerServiceImpl, times(1)).updateIngredient(1L, -1);
+
+    }
+
+    @Test
+    @DisplayName("Returns JSON of deleted ingredient and returns HTTP OK when id of ingredient found.")
+    public void testDeleteIngredient_WhenIdOfIngredientFound() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.deleteIngredient(1L)).thenReturn(canOfTomatoes);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/stocknroll/ingredients/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Can of tomatoes"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(4));
+
+        verify(mockIngredientMangerServiceImpl, times(1)).deleteIngredient(1L);
+
+    }
+
+    @Test
+    @DisplayName("Returns 404 Not Found and empty JSON object ingredient when id of ingredient not found.")
+    public void testDeleteIngredient_WhenIdOfIngredientNotFound() throws Exception {
+
+        when(mockIngredientMangerServiceImpl.deleteIngredient(10L)).thenReturn(nullIngredient);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/stocknroll/ingredients/10"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").doesNotExist());
 
     }
 
