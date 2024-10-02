@@ -1,5 +1,6 @@
 package com.candlelightapps.stocknroll_backend.controller;
 
+import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
@@ -25,7 +26,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -112,30 +119,30 @@ class RecipeManagerControllerTest {
         Long recipeId = 664737L;
         String returnMsg = String.format("Recipe with id %s has been deleted successfully", recipeId);
 
+        when(mockRecipeManagerServiceImpl.deleteRecipeById(recipeId)).thenReturn(returnMsg);
+
         this.mockMvcController.perform(
                         MockMvcRequestBuilders.delete("/api/v1/stocknroll/recipes/{id}", recipeId))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(returnMsg));
+
+        verify(mockRecipeManagerServiceImpl, times(1)).deleteRecipeById(recipeId);
     }
-/*
+
     @Test
-    @DisplayName("Test Get recipes for a given criteria")
-    public void testGetRecipesByValidCriteria() throws Exception {
+    @DisplayName("Test delete of a recipe by an invalid Id")
+    public void testDeleteRecipeByInvalidId() throws Exception {
+        Long recipeId = 999999999999L;
+        String returnMsg = String.format("Recipe with id %s cannot be found to be deleted", recipeId);
 
-        ArrayList<Result> recipeAL = new ArrayList<>();
-        recipeAL.add(japaneseVeganGluten);
-        recipeAL.add(japaneseVeganGluten2);
+        when(mockRecipeManagerServiceImpl.deleteRecipeById(recipeId)).thenReturn(returnMsg);
 
-        when(mockRecipeManagerServiceImpl.getRecipeByCriteria("Japanese", "vegetarian", "gluten")).thenReturn(recipeAL);
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/stocknroll/recipes/{id}", recipeId))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(returnMsg))
+                .andDo(print());
 
-       this.mockMvcController.perform(MockMvcRequestBuilders
-               .get("/api/v1/stocknroll/recipes/cuisine=japanese&diet=vegetarian&intolerances=gluten"))
-//               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(648487L))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Japanese Pickles"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(665496L))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Yakitori Glaze"));
+        verify(mockRecipeManagerServiceImpl, times(1)).deleteRecipeById(recipeId);
     }
-
- */
-
 }

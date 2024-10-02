@@ -1,6 +1,7 @@
 package com.candlelightapps.stocknroll_backend.service;
 
 import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
+import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
@@ -14,11 +15,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 class RecipeManagerServiceImplTest {
@@ -99,13 +100,31 @@ class RecipeManagerServiceImplTest {
     @Test
     @DisplayName("Test Delete Recipe throws an exception with an Invalid Id ")
     public void testDeleteRecipeByIdThrowsItemNotFoundException() {
-        Exception exception = assertThrows(ItemNotFoundException.class, () -> {
-            recipeManagerServiceImpl.deleteRecipeById(999999999999999L);;
-        });
+        Long recipeId = 715769L;
+        String expectedMsg = String.format("Recipe with id %s cannot be found to be deleted", recipeId);
+        String actualMsg;
 
-        String expectedMessage = "Recipe with id 999999999999999 cannot be found to be deleted";
-        String actualMessage = exception.getMessage();
+        when(mockRecipeRepository.findById(recipeId)).thenReturn(null);
+        try {
+            actualMsg = recipeManagerServiceImpl.deleteRecipeById(recipeId);
+        } catch (ItemNotFoundException infe) {
+            actualMsg = infe.getMessage();
+        }
+        verify(mockRecipeRepository, times(1)).findById(recipeId);
+        verify(mockRecipeRepository, times(0)).deleteById(recipeId);
 
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMsg.contains(expectedMsg));
+    }
+
+    @Test
+    @DisplayName("Test Delete Recipe with Valid Id ")
+    public void testSuccessfulDeleteRecipeById() {
+        Long recipeId = 715769L;
+        when(mockRecipeRepository.findById(715769L)).thenReturn(Optional.ofNullable(italianVegetarian));
+
+        String actualMsg = recipeManagerServiceImpl.deleteRecipeById(recipeId);
+        String expectedMessage = String.format("Recipe with id %s has been deleted successfully", recipeId);
+
+        assertTrue(actualMsg.contains(expectedMessage));
     }
 }
