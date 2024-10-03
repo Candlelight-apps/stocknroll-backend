@@ -1,6 +1,7 @@
 package com.candlelightapps.stocknroll_backend.service.SpoonacularApi;
 
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.ingredient.DataIngredient;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -35,6 +36,14 @@ public class SpoonacularDAO {
                 .uri("/recipes/complexSearch?apiKey=" + ApiConfig.getApiKey() + "&includeIngredients=" + ingredients + "&addRecipeInformation=true")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve().bodyToMono(Data.class).block();
+        return result;
+    }
+    public static DataIngredient getIngredientByName(String ingredient) {
+        if(ingredient==null || ingredient.isEmpty() || ingredient.isBlank()) return null;
+        DataIngredient result = client.get()
+                .uri("/food/ingredients/search?apiKey=" + ApiConfig.getApiKey() + "&query=" + ingredient + "&number=1")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve().bodyToMono(DataIngredient.class).block();
         return result;
     }
 
