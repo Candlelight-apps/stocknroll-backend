@@ -59,4 +59,16 @@ public class RecipeManagerController {
         return new ResponseEntity<>(recipes, HttpStatus.OK);
 
     }
+    @GetMapping("/recipes/ingredient")
+    public ResponseEntity<List<Result>> getRecipesByIngredient(@RequestParam(name = "values",defaultValue = "") ArrayList<String> includeIngredients) {
+
+        ArrayList<Result> recipes = recipeManagerService.getRecipesByIngredient(includeIngredients);
+
+        if(!recipes.isEmpty()) {
+            return new ResponseEntity<>(recipes, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(recipes, HttpStatus.NOT_FOUND);
+        }
+
+    }
 }

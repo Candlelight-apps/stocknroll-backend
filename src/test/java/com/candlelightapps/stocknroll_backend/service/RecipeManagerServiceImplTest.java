@@ -4,13 +4,17 @@ import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
 import com.candlelightapps.stocknroll_backend.model.Recipe;
 
+import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.repository.RecipeManagerRepository;
+import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.SpoonacularDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
@@ -65,9 +69,9 @@ class RecipeManagerServiceImplTest {
                 .sourceUrl("https://www.foodista.com/recipe/KV6GLYDK/lemony-greek-lentil-soup")
                 .build();
 
-        japaneseVeganGluten = new Result(648487,"Japanese Pickles", "https://img.spoonacular.com/recipes/648487-312x231.jpg", "jpg", 45, "http://www.foodista.com/recipe/HBL5F77J/japanese-pickles");
+        japaneseVeganGluten = new Result(648487, "Japanese Pickles", "https://img.spoonacular.com/recipes/648487-312x231.jpg", "jpg", 45, "http://www.foodista.com/recipe/HBL5F77J/japanese-pickles");
         japaneseVeganGluten2 = new Result(665496, "Yakitori Glaze", "https://img.spoonacular.com/recipes/665496-312x231.jpg", "jpg", 45, "https://spoonacular.com/yakitori-glaze-665496");
-        japaneseVeganGluten3 = new Result(37513,"Japanese Salad Dressing", "https://img.spoonacular.com/recipes/37513-312x231.jpg", "jpg", 12, "https://spoonacular.com/japanese-salad-dressing-37513");
+        japaneseVeganGluten3 = new Result(37513, "Japanese Salad Dressing", "https://img.spoonacular.com/recipes/37513-312x231.jpg", "jpg", 12, "https://spoonacular.com/japanese-salad-dressing-37513");
     }
 
     @Test
@@ -128,4 +132,97 @@ class RecipeManagerServiceImplTest {
 
         assertTrue(actualMsg.contains(expectedMessage));
     }
+
+    @Test
+    @DisplayName("Return recipes for 1 valid ingredient")
+    void testGetRecipesByIngredient_1validIngredient() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredients = new ArrayList<>(List.of("Beef"));
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients("Beef"))
+                    .thenReturn(data);
+            assertEquals(3, SpoonacularDAO.getRecipesByIngredients("Beef").results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredients);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+    }
+
+    @Test
+    @DisplayName("Return recipes for multiple valid ingredients")
+    void testGetRecipesByIngredient_validIngredients() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredientsList = new ArrayList<>();
+        ingredientsList.add("Beef");
+        ingredientsList.add("egg");
+        ingredientsList.add("tomatoes");
+
+        String ingredients = "Beef,egg,tomatoes";
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients(ingredients)).thenReturn(data);
+            assertEquals(3, SpoonacularDAO.getRecipesByIngredients(ingredients).results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredientsList);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+    }
+    @Test
+    @DisplayName("Return recipes for null input")
+    void testGetRecipesByIngredient_nullInput() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredientsList = null;
+
+        String ingredients = "";
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients(ingredients)).thenReturn(data);
+            assertEquals(3, SpoonacularDAO.getRecipesByIngredients(ingredients).results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredientsList);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+    }
+    @Test
+    @DisplayName("Return recipes for empty input")
+    void testGetRecipesByIngredient_emptyInput() {
+        ArrayList<Result> recipeList = new ArrayList<>();
+        recipeList.add(japaneseVeganGluten);
+        recipeList.add(japaneseVeganGluten2);
+        recipeList.add(japaneseVeganGluten3);
+        Data data = new Data(recipeList);
+
+        ArrayList<String> ingredientsList = new ArrayList<>();
+
+        String ingredients = "";
+
+        try (MockedStatic<SpoonacularDAO> mockSpoonacularDAO = Mockito.mockStatic(SpoonacularDAO.class)) {
+            mockSpoonacularDAO.when(() -> SpoonacularDAO.getRecipesByIngredients(ingredients)).thenReturn(data);
+            assertEquals(3, SpoonacularDAO.getRecipesByIngredients(ingredients).results().size());
+            List<Result> actualResults = recipeManagerServiceImpl
+                    .getRecipesByIngredient(ingredientsList);
+            assertEquals(recipeList.size(), actualResults.size());
+
+        }
+    }
 }
+

@@ -7,6 +7,7 @@ import com.candlelightapps.stocknroll_backend.model.spoonacular.Data;
 import com.candlelightapps.stocknroll_backend.model.spoonacular.Result;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
 import com.candlelightapps.stocknroll_backend.repository.RecipeManagerRepository;
+import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.IngredientHandler;
 import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.SpoonacularDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,18 @@ public class RecipeManagerServiceImpl implements RecipeManagerService {
             return recipes;
         } else {
             throw new ItemNotFoundException("There are no saved recipes!");
+        }
+    }
+
+    @Override
+    public ArrayList<Result> getRecipesByIngredient(ArrayList<String> ingredientsList) {
+        String ingredients = IngredientHandler.convertListToString(ingredientsList);
+        Data recipeData  = SpoonacularDAO.getRecipesByIngredients(ingredients);
+
+        if(!recipeData.results().isEmpty()) {
+            return recipeData.results();
+        } else {
+            throw new ItemNotFoundException("No recipes found matching criteria.");
         }
     }
 }
