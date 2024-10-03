@@ -1,7 +1,11 @@
 package com.candlelightapps.stocknroll_backend.service.SpoonacularApi;
 
+import com.candlelightapps.stocknroll_backend.model.Ingredient;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.ingredient.ResultIngredient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,4 +101,22 @@ class SpoonacularDAOTest {
         assertEquals(10,data.results().size());
     }
 
+    @Test
+    @DisplayName("Return null for null input")
+    void testGetIngredientByName_null() {
+        assertNull(SpoonacularDAO.getIngredientByName(null));
+    }
+    @Test
+    @DisplayName("Return null for empty input")
+    void testGetIngredientByName_empty() {
+        assertNull(SpoonacularDAO.getIngredientByName(""));
+    }
+    @Test
+    @DisplayName("Return DataIngreient for valid input")
+    void testGetIngredientByName_valid() {
+
+        var data = SpoonacularDAO.getIngredientByName("cornflakes");
+        assertEquals("corn cereal",data.results().get(0).name());
+        assertEquals("cornflakes.jpg",data.results().get(0).image());
+    }
 }

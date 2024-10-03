@@ -112,13 +112,20 @@ class IngredientManagerServiceImplTest {
     @Test
     @DisplayName("Returns ingredient that was posted when passed valid ingredient object")
     public void testAddIngredient_WhenPassedValidIngredient() {
+        Ingredient expectedResult = Ingredient.builder()
+                                    .id(2L)
+                                    .name("corn cereal")
+                                    .category("Breakfast cereals")
+                                    .quantity(1)
+                                    .expiryDate(LocalDate.of(2025,5,31))
+                                    .imageUrl("https://img.spoonacular.com/ingredients_250x250/cornflakes.jpg")
+                                    .build();
+        when(mockIngredientRepository.save(expectedResult)).thenReturn(expectedResult);
 
-        when(mockIngredientRepository.save(canOfTomatoes)).thenReturn(canOfTomatoes);
+        Ingredient result = ingredientManagerServiceImpl.addIngredient(cornflakes);
 
-        Ingredient result = ingredientManagerServiceImpl.addIngredient(canOfTomatoes);
-
-        verify(mockIngredientRepository, times(1)).save(canOfTomatoes);
-        assertEquals(canOfTomatoes, result);
+        verify(mockIngredientRepository, times(1)).save(expectedResult);
+        assertEquals(expectedResult, result);
     }
 
     @Test
