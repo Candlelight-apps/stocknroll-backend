@@ -102,5 +102,9 @@ class SpoonacularDAOTest {
     void testGetIngredientByName_null() {
         assertNull(SpoonacularDAO.getIngredientByName(null));
     }
-
+    @Test
+    @DisplayName("Return null for empty input")
+    void testGetIngredientByName_empty() {
+        assertNull(SpoonacularDAO.getIngredientByName(""));
+    }
 }
