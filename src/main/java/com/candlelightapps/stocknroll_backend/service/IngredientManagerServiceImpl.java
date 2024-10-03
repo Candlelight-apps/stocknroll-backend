@@ -3,7 +3,9 @@ package com.candlelightapps.stocknroll_backend.service;
 import com.candlelightapps.stocknroll_backend.exception.ItemNotFoundException;
 import com.candlelightapps.stocknroll_backend.exception.ParameterNotDefinedException;
 import com.candlelightapps.stocknroll_backend.model.Ingredient;
+import com.candlelightapps.stocknroll_backend.model.spoonacular.ingredient.DataIngredient;
 import com.candlelightapps.stocknroll_backend.repository.IngredientManagerRepository;
+import com.candlelightapps.stocknroll_backend.service.SpoonacularApi.SpoonacularDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,26 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
     @Override
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> ingredientList = new ArrayList<>();
-        ingredientRepository.findAll().forEach(ingredientList::add);
+
+        try {
+            try {
+                ingredientRepository.findAll().forEach(ingredientList::add);
+                return ingredientList;
+
+            } catch (NullPointerException e) {
+                throw new ItemNotFoundException("Repository empty.");
+
+            }
+        } catch (ItemNotFoundException e) {
+            ingredientList = null;
+
+        }
         return ingredientList;
     }
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        Ingredient ingredientAdded;
+        Ingredient ingredientAdded = null;
 
         try {
             if (ingredient.getName() == null || ingredient.getCategory() == null || ingredient.getExpiryDate() == null) {
@@ -34,7 +49,6 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
             }
 
         } catch (NullPointerException e) {
-            ingredientAdded = null;
             return ingredientAdded;
         }
 
@@ -46,14 +60,29 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
                 throw new ParameterNotDefinedException("Expiry date of ingredient cannot be in past.");
             }
 
-            ingredientRepository.save(ingredient);
-            ingredientAdded = ingredient;
+            DataIngredient data = SpoonacularDAO.getIngredientByName(ingredient.getName());
+            if(data!=null){
+                if(data.results()!=null && !data.results().isEmpty()) {
+                    ingredient.setName(data.results().getFirst().name());
+                    String imageUrl = convertStringToImageUrl(data.results().getFirst().image());
+                    ingredient.setImageUrl(imageUrl);
+                    ingredientRepository.save(ingredient);
+                    ingredientAdded = ingredient;
+                }
+
+            }else{
+                throw new ParameterNotDefinedException("Invalid ingredient.");
+            }
 
         } catch (ParameterNotDefinedException e) {
-            ingredientAdded = null;
+            return ingredientAdded;
         }
 
         return ingredientAdded;
+    }
+
+    private String convertStringToImageUrl(String image) {
+      return  "https://img.spoonacular.com/ingredients_250x250/"+image;
     }
 
     @Override
