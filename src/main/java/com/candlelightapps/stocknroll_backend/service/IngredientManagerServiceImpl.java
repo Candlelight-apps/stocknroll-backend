@@ -20,7 +20,20 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
     @Override
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> ingredientList = new ArrayList<>();
-        ingredientRepository.findAll().forEach(ingredientList::add);
+
+        try {
+            try {
+                ingredientRepository.findAll().forEach(ingredientList::add);
+                return ingredientList;
+
+            } catch (NullPointerException e) {
+                throw new ItemNotFoundException("Repository empty.");
+
+            }
+        } catch (ItemNotFoundException e) {
+            ingredientList = null;
+
+        }
         return ingredientList;
     }
 
