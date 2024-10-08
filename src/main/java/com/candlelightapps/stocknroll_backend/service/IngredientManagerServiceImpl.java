@@ -82,7 +82,7 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
     }
 
     private String convertStringToImageUrl(String image) {
-      return  "https://img.spoonacular.com/ingredients_250x250/"+image;
+      return  "https://img.spoonacular.com/ingredients_100x100/"+image;
     }
 
     @Override
