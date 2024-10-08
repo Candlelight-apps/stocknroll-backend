@@ -63,7 +63,10 @@ public class IngredientManagerServiceImpl implements IngredientManagerService {
             DataIngredient data = SpoonacularDAO.getIngredientByName(ingredient.getName());
             if(data!=null){
                 if(data.results()!=null && !data.results().isEmpty()) {
-                    ingredient.setName(data.results().getFirst().name());
+                    String ingredientName = data.results().getFirst().name().toLowerCase();
+                    ingredientName = ingredientName.substring(0,1).toUpperCase() + ingredientName.substring(1);
+
+                    ingredient.setName(ingredientName);
                     String imageUrl = convertStringToImageUrl(data.results().getFirst().image());
                     ingredient.setImageUrl(imageUrl);
                     ingredientRepository.save(ingredient);
