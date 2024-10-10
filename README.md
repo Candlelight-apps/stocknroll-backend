@@ -51,12 +51,17 @@ Create the following .properties files under resources folder : src/main/resourc
 **application.properties**
 
 >spring.application.name=stocknroll-backend
-spring.profiles.active=h2 <change this to your corresponding .properties file name containing your desired db connection config>
-#Health endpoint
-management.endpoints.enabled-by-default=false management.endpoint.health.enabled=true management.endpoints.web.exposure.include=health
-#Enable Swagger UI
-springdoc.api-docs.enabled=true
-springdoc.swagger-ui.enabled=true
+> 
+>spring.profiles.active=h2 <change this to your corresponding .properties file name containing your desired db connection config>
+> 
+>#Health endpoint
+> 
+>management.endpoints.enabled-by-default=false management.endpoint.health.enabled=true management.endpoints.web.exposure.include=health
+> 
+>#Enable Swagger UI
+> 
+>springdoc.api-docs.enabled=true<br />
+>springdoc.swagger-ui.enabled=true
 
 ### H2
 
