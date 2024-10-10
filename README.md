@@ -1,4 +1,4 @@
-# StockNRoll API - README
+# Stock'n'Roll API - README
 
 ## Introduction
 
